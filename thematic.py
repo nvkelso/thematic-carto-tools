@@ -19,10 +19,34 @@ try:
 except ImportError:
   import gdal
   import ogr
-#import ogrinfo
-import quantile
+#from import Thematic.ogrinfo import Ogrinfo
+from Thematic.quantile import Quantile
+from Thematic.classify import Classify
 
-def Main():
+
+optparser = OptionParser(usage="""%prog [options]
+
+OGR based Python tools for querrying a data source (SHP, etc) and drawing 
+# thematic cartographic representations.""")
+
+optparser.add_option('-s', '--data_file', dest='infilename',
+                  help='Give me your huddled masses of geodata.')
+optparser.add_option('-o', '--out_file', dest='outfilename', default='stylesheet',
+                  help='Style name for resulting MSS and MML files.')                  
+optparser.add_option('-i', '--indicator', dest='fieldname', 
+                  help='Data is in which column.')
+optparser.add_option('-l', '--legend-type', dest='legend_type', 
+                  help='Valid types are: single-symbol, unique-value, continuous-color, and graduated-symbol.')
+optparser.add_option('-c', '--classification-type', dest='class_type', 
+                  help='Valid types are: quantiles, tk tk tk.')
+optparser.add_option('-n', '--number-breaks', dest='num_breaks', default=5, type='int',
+                  help='Number of data breaks. single-symbol=1 by default.')
+optparser.add_option('-r', '--colors', dest='colors', default='YlGnBu',
+                  help='From ColorBrewer.org')
+
+if __name__ == "__main__":
+
+    (options, args) = optparser.parse_args()
 
     if not options.infilename:
         print 'Requires input file'
@@ -141,7 +165,7 @@ def Main():
         # TODO: Cast the dict to a list ignoring the counts
      
         for qtype in range(1,10):
-            print qtype, quantile(x, 0.35, qtype)
+            print qtype, Quantile(x, 0.35, qtype)
             
         # TODO: make the MSS
                         
@@ -216,29 +240,3 @@ def gather_stats(layer, fieldname, num_features=10000):
     
     # Return the results
     return statistics
-    
-if __name__ == "__main__":
-
-    parser = OptionParser(usage="""%prog [options]
-
-    OGR based Python tools for querrying a data source (SHP, etc) and drawing 
-    # thematic cartographic representations.""")
-    
-    parser.add_option('-s', '--data_file', dest='infilename',
-                      help='Give me your huddled masses of geodata.')
-    parser.add_option('-o', '--out_file', dest='outfilename', default='stylesheet',
-                      help='Style name for resulting MSS and MML files.')                  
-    parser.add_option('-f', '--field', dest='fieldname', 
-                      help='Data is in which column.')
-    parser.add_option('-l', '--legend-type', dest='legend_type', 
-                      help='Valid types are: single-symbol, unique-value, continuous-color, and graduated-symbol.')
-    parser.add_option('-c', '--classification-type', dest='class_type', 
-                      help='Valid types are: quantiles, tk tk tk.')
-    parser.add_option('-n', '--number-breaks', dest='num_breaks', default=5, type='int',
-                      help='Number of data breaks. single-symbol=1 by default.')
-    parser.add_option('-r', '--colors', dest='colors', default='YlGnBu',
-                      help='From ColorBrewer.org')
-    
-    (options, args) = parser.parse_args()
-
-    Main()
