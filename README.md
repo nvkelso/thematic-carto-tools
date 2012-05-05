@@ -22,17 +22,17 @@ Includes built in support for CSV/TSV and DBF/SHP files. Uses OGR for other file
 
 ## Usage
 
-Default, just get single sympol maps up (point or poly):
+Just a single sympol:
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --legend-type=single-symbol
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp
 
-Classify a polygon/polyline dataset in 5 steps:
+Classify a polygon/polyline dataset in 5 steps (default is: --legend-type=quantile -n 5):
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=POP_EST --legend-type=bins --classification-type=quantiles -n 5 --colors=YlGnBu
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=POP_EST
 
 Separate color for each feature value:
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=MAP_COLOR --legend-type=bins --classification-type=unique-values --colors=YlGnBu
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=MAP_COLOR --classification-type=unique-value
 
 Will create 3 files:
 
