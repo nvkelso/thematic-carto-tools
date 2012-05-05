@@ -24,15 +24,15 @@ Includes built in support for CSV/TSV and DBF/SHP files. Uses OGR for other file
 
 Just a single sympol:
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp
+    python thematic.py sample_data/ne_10m_admin_0_countries.shp
 
-Classify a polygon/polyline dataset in 5 steps (default is: --legend-type=quantile -n 5):
+Classify a polygon/polyline dataset in 5 steps using the POP_EST indicator field (default is: --legend-type=quantile -n 5):
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=POP_EST
+    python thematic.py sample_data/ne_10m_admin_0_countries.shp POP_EST
 
 Separate color for each feature value:
 
-    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=MAP_COLOR --classification-type=unique-value
+    python thematic.py sample_data/ne_10m_admin_0_countries.shp MAP_COLOR --classification-type=unique-value
 
 Will create 3 files:
 
@@ -40,14 +40,18 @@ Will create 3 files:
 2. `stylesheet.mss` - Cascadenik map style sheet file
 3. `legend.html` - See the color breaks in a pretty HTML legend
 
-These files are writen local to where you ran the script. Use the "--out_files" option to specify different names.
+These files are writen local to where you ran the script. Use the "--out_files" option to specify different names OR...
+
+NOTE: If you only want to generate the .mss file, try this:
     
+    python thematic.py sample_data/ne_10m_admin_0_countries.shp POP_EST stylesheet.mss
+
 
 ## Requirements
 
 - Python `>= 2.6`
 
-- GDAL with OGR support `>= ?`
+- GDAL with OGR support `>= 1.8.1`
 
 
 ## Author

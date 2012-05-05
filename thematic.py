@@ -67,25 +67,70 @@ optparser.add_option('--color-space', dest='color-space', default='ColorBrewer',
 if __name__ == "__main__":
 
     (options, args) = optparser.parse_args()
+    
+    #print 'len(args): ', len(args)
+    indicator_field = None
+    
+    if len(args) > 0:
+        filename = str(args[:1][0])
+        other_files = args[1:] # this list might be empty, if no other output files were provided
 
-    if not options.infilename:
+        parse_indicator = ''
+        parse_mss = ''
+        parse_mml = ''
+        parse_html = ''
+        
+        if not other_files:
+            other_files = options.outfiles
+        else:
+            for item in other_files:
+                if item.find('.mss') != -1:
+                    parse_mss = item
+                elif item.find('.mml') != -1:
+                    parse_mml = item
+                elif item.find('.html') != -1:
+                    parse_html = item
+                else:
+                    parse_indicator = item
+            
+            if parse_mss == '' and parse_mml == '' and parse_html == '':
+                other_files = options.outfiles
+            else:            
+                other_files = ( parse_mss, parse_mml, parse_html )
+                        
+            if parse_indicator != '':
+                indicator_field = parse_indicator
+            else:
+                indicator_field = options.field_name
+    else:
+        filename = options.infilename
+        other_files = options.outfiles
+        indicator_field = options.field_name    
+   
+    #filename, columnname = args[:2] # this will fail if there are any fewer than two args
+    #other_files = args[2:] # this list might be empty, if no other output files were provided
+
+    if not filename:
         print 'Requires input file'
         sys.exit(1)
+        
+    options.infilename
     
     # Input geodata
-    in_dir = os.path.dirname( os.path.abspath( options.infilename ) )
-    in_file, in_file_extension = os.path.splitext( os.path.abspath( options.infilename ) )
-    in_file_name_part, in_file_ext_part = os.path.basename( os.path.abspath( options.infilename ) ).split('.')
-    in_file_fullpath = os.path.abspath( options.infilename )
-        
+    in_dir = os.path.dirname( os.path.abspath( filename ) )
+    in_file, in_file_extension = os.path.splitext( os.path.abspath( filename ) )
+    in_file_name_part, in_file_ext_part = os.path.basename( os.path.abspath( filename ) ).split('.')
+    in_file_fullpath = os.path.abspath( filename )
+            
     # Output MSS, MML, and HTML files
-    out_dir = os.path.dirname( os.path.abspath( options.outfiles[0] ) )
-    out_mss = options.outfiles[0]
-    out_mml = options.outfiles[1]
-    out_html = options.outfiles[2]
-    
+    out_dir = os.path.dirname( os.path.abspath( other_files[0] ) )
+    out_mss = other_files[0]
+    out_mml = other_files[1]
+    out_html = other_files[2]
+        
     # Store the options
-    indicator_field = options.field_name
+    if indicator_field == None:
+        indicator_field = options.field_name
     if options.measurement == 'quantitative': 
         quantitative = True
     else: 
@@ -140,7 +185,6 @@ if __name__ == "__main__":
                     print "The following exception occurred : ", e
             
         elif in_file_extension == '.shp' :
-            print 'in .shp parse'
             
             # Get the shapefile driver
             driver = ogr.GetDriverByName('ESRI Shapefile')
@@ -213,9 +257,12 @@ if __name__ == "__main__":
         os.makedirs(out_dir)
     
     # prepare output files
-    mss_file = open(out_mss,"w")
-    mml_file = open(out_mml,"w")
-    html_file = open(out_html,"w")
+    if other_files[0] != '':
+        mss_file = open(out_mss,"w")
+    if other_files[1] != '':
+        mml_file = open(out_mml,"w")
+    if other_files[2] != '':
+        html_file = open(out_html,"w")
     
     # Set the working directory (important for the SHP OGR bits?)
     os.chdir(in_dir)        
@@ -225,7 +272,7 @@ if __name__ == "__main__":
     mss_footer = ['']
     
     # Stub out the MML (layers)
-    mml_header = ['<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE Map[\n\t<!ENTITY epsg4326 "+proj=longlat +datum=WGS84">\n\t<!ENTITY epsg900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">\n\t<!ENTITY epsg900913_extent "-20037508,-20037508,20037508,20037508">\n]>\n\n<Map srs="&epsg900913;">\n\n\t<Stylesheet src="stylesheet.mss"/>']
+    mml_header = ['<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE Map[\n\t<!ENTITY epsg4326 "+proj=longlat +datum=WGS84">\n\t<!ENTITY epsg900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">\n\t<!ENTITY epsg900913_extent "-20037508,-20037508,20037508,20037508">\n]>\n\n<Map srs="&epsg900913;">\n\n\t<Stylesheet src="' + other_files[0] + '"/>']
     mml_layer = ['\n\n\t<Layer class="' + in_file_name_part + '" id="'+ in_file_name_part + '" srs="&epsg4326;">\n\t\t<Datasource>\n\t\t\t<Parameter name="type">shape</Parameter>\n\t\t\t<Parameter name="file">' + in_file + '</Parameter>\n\t\t</Datasource>\n\t</Layer>\n']
     mml_footer = ['\n</Map>']
     
@@ -234,42 +281,45 @@ if __name__ == "__main__":
     html_footer = ['</body></html>']
             
     # Write out the headers to the text files
-    mss_file.writelines(mss_header)
-    mml_file.writelines(mml_header)
-    html_file.writelines(html_header)    
+    if other_files[0] != '':
+        mss_file.writelines(mss_header)
+    if other_files[1] != '':
+        mml_file.writelines(mml_header)
+    if other_files[2] != '':
+        html_file.writelines(html_header)    
     
     #print 'classification_type: ', classification_type
     #print 'indicator: ', indicator_field
     
     # What type of map are we making?
     if classification_type == 'single-symbol':
-        data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'unique-value' or classification_type == 'unique-values':
-        data_classed = Classify( data_clean, False, indicator_field, 5, 'Unique value', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field, 5, 'Unique value', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'quantile' or classification_type == 'quantiles':
         if not quantitative:
             print 'Can only make Quantiles for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 5, 'Quantiles', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 5, 'Quantiles', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'equal-interval':
         if not quantitative:
             print 'Can only make Equal Interval for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Equal Interval', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Equal Interval', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'standard-deviation':
         if not quantitative:
             print 'Can only make Standard Deviation for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Standard Deviation', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Standard Deviation', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'minimum-variance' or classification_type == 'jenks' or classification_type == 'jenks-optimal':
         if not quantitative:
             print 'Can only make Minimum Variance for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Minimum Variance', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Minimum Variance', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'manual':
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Manual', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Manual', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'continuous-color' or classification_type == 'ratio':
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Ratio', [], indicator_field, 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Ratio', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'graduated-symbol':
         pass
     else:
@@ -291,21 +341,30 @@ if __name__ == "__main__":
 
     mss_layers = data_classed.get_mss()
     if indicator_field:
-        legend_layers = 'legend #' + indicator_field + '<br/>' + data_classed.get_legend()
+        legend_layers = indicator_field + '<br/>' + data_classed.get_legend()
     else:
-        legend_layers = 'legend #' + '<br/>' + data_classed.get_legend()
+        legend_layers = data_classed.get_legend()
     
     # Write out the layer content to the text files
-    mss_file.writelines(mss_layers)
-    mml_file.writelines(mml_layer)    
-    html_file.writelines(legend_layers)
+    if other_files[0] != '':
+        mss_file.writelines(mss_layers)
+    if other_files[1] != '':
+        mml_file.writelines(mml_layer)    
+    if other_files[2] != '':
+        html_file.writelines(legend_layers)
     
     # Write out the footers to the text files
-    mss_file.writelines(mss_footer)
-    mml_file.writelines(mml_footer)
-    html_file.writelines(html_footer)
+    if other_files[0] != '':
+        mss_file.writelines(mss_footer)
+    if other_files[1] != '':
+        mml_file.writelines(mml_footer)
+    if other_files[2] != '':
+        html_file.writelines(html_footer)
     
     # Close the MSS and MML files
-    mss_file.close()
-    mml_file.close()
-    html_file.close()
+    if other_files[0] != '':
+        mss_file.close()
+    if other_files[1] != '':
+        mml_file.close()
+    if other_files[2] != '':
+        html_file.close()
