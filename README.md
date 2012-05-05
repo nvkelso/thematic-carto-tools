@@ -36,9 +36,9 @@ Separate color for each feature value:
 
 Will create 3 files:
 
-`style.mml` - Cascadenik map markup layer file
-`stylesheet.mss` - Cascadenik map style sheet file
-`legend.html` - See the color breaks in a pretty HTML legend
+1. `style.mml` - Cascadenik map markup layer file
+2. `stylesheet.mss` - Cascadenik map style sheet file
+3. `legend.html` - See the color breaks in a pretty HTML legend
     
 
 ## Requirements
