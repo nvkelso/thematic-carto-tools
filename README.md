@@ -16,21 +16,23 @@ Git checkout (requires git)
 
     git clone git://github.com/nvkelso/thematic-carto-tools.git
     cd thematic-carto-tools
+    
+Includes built in support for CSV/TSV and DBF/SHP files. Uses OGR for other file types.
 
 
 ## Usage
 
 Default, just get single sympol maps up (point or poly):
 
-    python thematic.py datafile outstylefile
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --legend-type=single-symbol
 
 Classify a polygon/polyline dataset in 5 steps:
 
-    python thematic.py datafile outstylefile -f fieldname --legend-type continuous-color -c quantiles -n 5 --colors YlGnBu
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=POP_EST --legend-type=bins --classification-type=quantiles -n 5 --colors=YlGnBu
 
 Separate color for each feature value:
 
-    python thematic.py datafile outstylefile -f fieldname --legend-type unique-value --colors YlGnBu
+    python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=MAP_COLOR --legend-type=bins --classification-type=unique-values --colors=YlGnBu
 
 
 ## Requirements
@@ -40,11 +42,14 @@ Separate color for each feature value:
 - GDAL with OGR support `>= ?`
 
 
-## Authors
+## Author
 
 - Nathaniel V. KELSO (nvkelso)
 
+### Contributors
+
 - Michael Lawrence Evans (mlevans)
+- Mike Migurski (migurski)
 
 
 ## Coda
