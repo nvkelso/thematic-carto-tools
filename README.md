@@ -26,7 +26,7 @@ Just a single sympol:
 
     python thematic.py sample_data/ne_10m_admin_0_countries.shp
 
-Classify a polygon/polyline dataset in 5 steps using the POP_EST indicator field (default is: --legend-type=quantile -n 5):
+Classify a polygon/polyline dataset in 5 steps using the POP_EST indicator field (default is: --classification-type=quantile -n 5):
 
     python thematic.py sample_data/ne_10m_admin_0_countries.shp POP_EST
 
