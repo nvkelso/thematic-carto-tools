@@ -34,6 +34,12 @@ Separate color for each feature value:
 
     python thematic.py --in_file=sample_data/ne_10m_admin_0_countries.shp --indicator=MAP_COLOR --legend-type=bins --classification-type=unique-values --colors=YlGnBu
 
+Will create 3 files:
+
+    `style.mml` - Cascadenik map markup layer file
+    `stylesheet.mss` - Cascadenik map style sheet file
+    `legend.html` - See the color breaks in a pretty HTML legend
+    
 
 ## Requirements
 
