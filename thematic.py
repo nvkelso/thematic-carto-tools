@@ -51,20 +51,17 @@ optparser.add_option('--name-field', dest='name_field', default='name',
 optparser.add_option('--filter-field', dest='filter_field', action='append', nargs=2,
                       help='Field to use for limiting selection by theme and the value to limit by. Default is no filter. Useful if more than one enumeration unit type is present in master data file (eg: mixed ZIPs and Counties).')
 
-optparser.add_option('-l', '--legend-type', dest='legend_type', default='tell-me',
-                      help='Valid types are: tell-me (tk), single-symbol, unique-value, bins, continuous-color, and graduated-symbol.')
-
-optparser.add_option('-c', '--classification-type', dest='class_type', 
-                      help='Valid types are: quantiles, tk tk tk.')
+optparser.add_option('-c', '--classification-type', dest='class_type', default='quantile',
+                      help='Valid types are: quantile, single-symbol, unique-value, equal-interval, standard-deviation, minimum-variance, jenks, manual, ratio, continuous-color, graduated-symbol, describe')
 
 optparser.add_option('-n', '--number-breaks', dest='num_breaks', default=5, type='int',
                       help='Number of data breaks. single-symbol=1 by default.')
 
 optparser.add_option('-r', '--colors', dest='colors', default='YlGnBu',
-                      help='Named color series from ColorBrewer.org or other--color-space (done), or comma-separated-values for specific #aabbcc; hex values (tk)')
+                      help='Named color series from ColorBrewer.org or other--color-space. Note yet implemented: comma-separated-values for specific #aabbcc; hex values')
 
 optparser.add_option('--color-space', dest='color-space', default='ColorBrewer',
-                      help='ColorBrewer, Hex (tk), Kuler (tk)')
+                      help='ColorBrewer. Not yet implemented: Hex, Kuler')
 
 
 if __name__ == "__main__":
@@ -80,9 +77,7 @@ if __name__ == "__main__":
     in_file, in_file_extension = os.path.splitext( os.path.abspath( options.infilename ) )
     in_file_name_part, in_file_ext_part = os.path.basename( os.path.abspath( options.infilename ) ).split('.')
     in_file_fullpath = os.path.abspath( options.infilename )
-    
-    print 'options.outfiles: ', options.outfiles
-    
+        
     # Output MSS, MML, and HTML files
     out_dir = os.path.dirname( os.path.abspath( options.outfiles[0] ) )
     out_mss = options.outfiles[0]
@@ -96,20 +91,21 @@ if __name__ == "__main__":
     else: 
         quantitative = False
     feature_name_field = options.name_field
-    legend_type = options.legend_type
     classification_type = options.class_type
     filter_field = options.filter_field
+    
+    if indicator_field == None:
+        print 'ALERT: no --indicator field name provided so defaulting back to single-symbol'
+        classification_type = 'single-symbol'
         
         
     # init the cleaned data holder
     data_clean = []
-
-    print 'in_file_extension: ', in_file_extension
     
     # gather the data...
     # what file type are we working with?
     
-    if legend_type != 'single-symbol':
+    if classification_type != 'single-symbol':
         if in_file_extension == '.csv' :
             try:
                 f = open( in_file_fullpath, 'rt' )
@@ -139,7 +135,7 @@ if __name__ == "__main__":
                     else:
                         indicator = row[ indicator_field ]
                     name = row[ feature_name_field ]
-                    data_clean.append( {'name': name, 'indicator': indicator } )
+                    data_clean.append( {'name': name, indicator_field: indicator } )
                 except Exception, e:
                     print "The following exception occurred : ", e
             
@@ -158,6 +154,12 @@ if __name__ == "__main__":
             
             # Get the data layer
             layer = data_raw.GetLayer()
+            
+            #http://www.gdal.org/ogr/ogr__core_8h.html#a800236a0d460ef66e687b7b65610f12a
+            # wkbPoint or wkbMultiPoint or wkbPoint25D or wkbMultiPoint25D
+            # wkbLineString or wkbMultiLineString or wkbLineString25D or wkbMultiLineString25D
+            # wkbPolygon or wkbMultiPolygon or wkbPolygon25D or wkbMultiPolygon25D
+            #geometry_type = layer
             
             # Get the row
             feature = layer.GetNextFeature()
@@ -179,7 +181,7 @@ if __name__ == "__main__":
                 except:
                     name = i
                     
-                data_clean.append( {'name': name, 'indicator': indicator } )
+                data_clean.append( {'name': name, indicator_field: indicator } )
                        
                 # Destroy the feature and get a new one
                 feature.Destroy()
@@ -189,14 +191,15 @@ if __name__ == "__main__":
             data_raw.Destroy()
     else:
         classification_type = 'single-symbol'
-        data_clean.append( {'name': '', 'indicator': 1 } )
-        data_clean.append( {'name': '', 'indicator': 1 } )
+        indicator_field = 'indicator'
+        data_clean.append( {'name': '', indicator_field: 1 } )
+        data_clean.append( {'name': '', indicator_field: 1 } )
 
    
     #print 'data_clean: ', data_clean
 
     # User just wants to know what's in their data file
-    if legend_type == 'tell-me':
+    if classification_type == 'describe':
         print 'Printing stats (one moment)...'
         
         # TODO: print out the (field names) and (field types).
@@ -235,39 +238,38 @@ if __name__ == "__main__":
     mml_file.writelines(mml_header)
     html_file.writelines(html_header)    
     
-    print 'legend_type: ', legend_type
-    print 'classification_type: ', classification_type
-    print 'indicator: ', indicator_field
+    #print 'classification_type: ', classification_type
+    #print 'indicator: ', indicator_field
     
     # What type of map are we making?
     if classification_type == 'single-symbol':
-        data_classed = Classify( data_clean, False, 'indicator', 5, 'Universal', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'unique-value' or classification_type == 'unique-values':
-        data_classed = Classify( data_clean, False, 'indicator', 5, 'Unique value', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field, 5, 'Unique value', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'quantile' or classification_type == 'quantiles':
         if not quantitative:
             print 'Can only make Quantiles for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, 'indicator' , 5, 'Quantiles', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 5, 'Quantiles', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'equal-interval':
         if not quantitative:
             print 'Can only make Equal Interval for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, 'indicator' , 4, 'Equal Interval', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Equal Interval', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'standard-deviation':
         if not quantitative:
             print 'Can only make Standard Deviation for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, 'indicator' , 4, 'Standard Deviation', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Standard Deviation', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'minimum-variance' or classification_type == 'jenks' or classification_type == 'jenks-optimal':
         if not quantitative:
             print 'Can only make Minimum Variance for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, 'indicator' , 4, 'Minimum Variance', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Minimum Variance', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'manual':
-        data_classed = Classify( data_clean, False, 'indicator' , 4, 'Manual', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Manual', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'continuous-color' or classification_type == 'ratio':
-        data_classed = Classify( data_clean, False, 'indicator' , 4, 'Ratio', [], 'indicator', 2, 'None', [], 'YlGn'  )
+        data_classed = Classify( data_clean, False, indicator_field , 4, 'Ratio', [], indicator_field, 2, 'None', [], 'YlGn'  )
     elif classification_type == 'graduated-symbol':
         pass
     else:
