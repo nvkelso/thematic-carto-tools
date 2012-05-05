@@ -40,7 +40,7 @@ Will create 3 files:
 2. `stylesheet.mss` - Cascadenik map style sheet file
 3. `legend.html` - See the color breaks in a pretty HTML legend
 
-These files are writen local to where you ran the script. Use the "--out_files" to specify different names.
+These files are writen local to where you ran the script. Use the "--out_files" option to specify different names.
     
 
 ## Requirements
