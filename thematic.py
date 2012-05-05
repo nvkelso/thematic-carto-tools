@@ -36,7 +36,7 @@ thematic cartographic representations.""")
 optparser.add_option('-s', '--in_file','--data_file', dest='infilename',
                       help='Give me your huddled masses of geodata!')
 
-optparser.add_option('-o', '--out_files', dest='outfiles', action='append', nargs=3, default=('stylesheet.css', 'style.mml', 'legend.html'),
+optparser.add_option('-o', '--out_files', dest='outfiles', action='append', nargs=3, default=('stylesheet.mss', 'style.mml', 'legend.html'),
                       help='Style name for resulting MSS, MML, and HTML files.')
 
 optparser.add_option('-i', '--indicator', '--field-name', dest='field_name', 
