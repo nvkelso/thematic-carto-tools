@@ -22,15 +22,15 @@ Git checkout (requires git)
 
 Default, just get single sympol maps up (point or poly):
 
-    thematic.py datafile outstylefile
+    python thematic.py datafile outstylefile
 
 Classify a polygon/polyline dataset in 5 steps:
 
-    thematic.py datafile outstylefile -f fieldname --legend-type continuous-color -c quantiles -n 5 -r YlGnBu
+    python thematic.py datafile outstylefile -f fieldname --legend-type continuous-color -c quantiles -n 5 --colors YlGnBu
 
 Separate color for each feature value:
 
-    thematic.py datafile outstylefile -f fieldname --legend-type unique-value -r YlGnBu
+    python thematic.py datafile outstylefile -f fieldname --legend-type unique-value --colors YlGnBu
 
 
 ## Requirements
