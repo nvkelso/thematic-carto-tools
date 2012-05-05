@@ -52,3 +52,58 @@ class Ogrinfo:
                     else:
                         output += ' (None)'
                     print output
+                
+                    gather_ogr_stats( layer, fld_name, 100000 )
+
+                    
+    # TODO: This isn't tested yet
+    def gather_ogr_stats( layer, indicator_field, num_features=10000 ):
+        statistics = {'values':{}, 'min':{}, 'max':{}, 'type':'', 'count':0, 'count_not_null':0}
+        # Loop through the features in the layer
+        feature = layer.GetNextFeature()
+    
+        if type( feature.GetField(indicator_field) ) is str:
+            statistics['type'] = 'String'
+        else:
+            statistics['type'] = 'Number'
+        
+        # Gather values
+        while feature:        
+            # get the attributes
+            key = feature.GetField(indicator_field)
+            
+            # Add key to dictonary, and track with value counter for total values (histogram)
+            if key in statistics['values']:
+                statistics['values'][ key ] += 1
+            else:
+                statistics['values'][ key ] = 1
+            
+            # Increment the statistics counter
+            statistics['count'] += 1
+            if key:
+                statistics['count_not_null'] += 1
+                   
+            # Destroy the feature and get a new one
+            feature.Destroy()
+            feature = layer.GetNextFeature()
+        
+        # Calculate min/max for the data ranges
+        
+        field_values = []
+        field_values_counts = []
+        for k, v in statistics['values'].iteritems():
+            field_values.append(k)
+            field_values_counts.append(v)
+        
+        #print min(field_values)
+        #print max(field_values)
+        #print min(field_values_counts)
+        #print max(field_values_counts)
+        
+        statistics['min'] = min(field_values)
+        statistics['max'] = max(field_values)
+            
+        # TODO: sort the dict and take the last and first
+        
+        # Return the results
+        return statistics
