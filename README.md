@@ -2,7 +2,7 @@
 
 CSV, SHP, and OGR based Python tools for querrying a data source and drawing thematic cartographic representations.
 
-By Nathaniel Vaughn Kelso at Stamen.
+By **Nathaniel Vaughn Kelso** at [Stamen](http://stamen.com).
 
 Stubs out MSS and MML files based on a dataset for:
 
