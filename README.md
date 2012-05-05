@@ -39,6 +39,8 @@ Will create 3 files:
 1. `style.mml` - Cascadenik map markup layer file
 2. `stylesheet.mss` - Cascadenik map style sheet file
 3. `legend.html` - See the color breaks in a pretty HTML legend
+
+These files are writen local to where you ran the script. Use the "--out_files" to specify different names.
     
 
 ## Requirements
