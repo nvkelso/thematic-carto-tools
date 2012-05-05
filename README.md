@@ -9,6 +9,7 @@ Stubs out MSS and MML files based on a dataset for:
 * Quick data exploration of what's in a dataset
 * Refined cartographic presentations
 
+Bonus: Will also build a legend in HTML format displaying the colors and bin labels.
 
 ## Installation
 
