@@ -51,6 +51,8 @@ NOTE: If you only want to generate the .mss file, try this:
 
 ### Sample output
 
+    ![legend](https://github.com/nvkelso/thematic-carto-tools/raw/master/sample_data/images/legend.png)
+
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=-99.0]{ polygon-fill: #ffffcc; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=72660.0]{ polygon-fill: #c2e699; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=1533964.0]{ polygon-fill: #78c679; }
