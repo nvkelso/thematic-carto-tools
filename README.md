@@ -4,7 +4,7 @@ CSV, SHP, and OGR based Python tools for querrying a data source and drawing the
 
 By **Nathaniel Vaughn Kelso** at [Stamen](http://stamen.com).
 
-Stubs out MSS and MML files compatabile with Mapnik based on a dataset for:
+Stubs out MSS and MML files compatabile with [Mapnik](https://github.com/mapnik/mapnik) based on a dataset for:
 
 * Quick data exploration of what's in a dataset
 * Refined cartographic presentations
