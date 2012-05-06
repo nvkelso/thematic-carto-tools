@@ -11,6 +11,8 @@ Stubs out MSS and MML files based on a dataset for:
 
 Bonus: Will also build a legend in HTML format displaying the colors and bin labels.
 
+Looking for vector thematic maps in the browser instead? Try IndieMaps [OpenLayers-Symbology](https://github.com/sourcepole/qgis-openlayers-plugin).
+
 ## Installation
 
 Git checkout (requires git)
