@@ -23,7 +23,7 @@ except ImportError:
   import ogr
   
 from Thematic.classify import Classify
-#from import Thematic.ogrinfo import OgrInfo
+from Thematic.ogrinfo import describe as Describe
 
 
 optparser = OptionParser(usage="""%prog [options]
@@ -292,6 +292,8 @@ if __name__ == "__main__":
     #print 'indicator: ', indicator_field
     
     # What type of map are we making?
+    elif classification_type == 'describe':
+        Describe( in_file_fullpath )
     if classification_type == 'single-symbol':
         data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'unique-value' or classification_type == 'unique-values':
