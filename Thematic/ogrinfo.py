@@ -38,7 +38,7 @@ def describe(   data_source,
     # get the shapefile driver
     driver = ogr.GetDriverByName('ESRI Shapefile')
     
-    print 'in_file_name_part: ', in_file_name_part
+    #print 'in_file_name_part: ', in_file_name_part
     
     # Checking the parameters.
     if isinstance(data_source, str):
