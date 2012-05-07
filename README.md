@@ -4,7 +4,7 @@ CSV, SHP, and OGR based Python tools for querrying a data source and drawing the
 
 By **Nathaniel Vaughn Kelso** at [Stamen](http://stamen.com).
 
-Stubs out MSS and MML files based on a dataset for:
+Stubs out MSS and MML files compatabile with [Mapnik](https://github.com/mapnik/mapnik) based on a dataset for:
 
 * Quick data exploration of what's in a dataset
 * Refined cartographic presentations
@@ -56,12 +56,39 @@ Wonder what indicator to use? Use the "describe" mode to report OrgInfo style fi
 
 ### Sample output
 
+Legend HTML:
+
+![legend](https://github.com/nvkelso/thematic-carto-tools/raw/master/sample_data/images/legend.png)
+
+Styling MSS:
+
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=-99.0]{ polygon-fill: #ffffcc; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=72660.0]{ polygon-fill: #c2e699; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=1533964.0]{ polygon-fill: #78c679; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=6995655.0]{ polygon-fill: #31a354; }
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=22215421.0]{ polygon-fill: #006837; }
 
+Layers MML:
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE Map[
+        <!ENTITY epsg4326 "+proj=longlat +datum=WGS84">
+	    <!ENTITY epsg900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+	    <!ENTITY epsg900913_extent "-20037508,-20037508,20037508,20037508">
+    ]>
+    
+    <Map srs="&epsg900913;">
+    
+	    <Stylesheet src="stylesheet.mss"/>
+
+	    <Layer class="ne_10m_admin_0_countries" id="ne_10m_admin_0_countries" srs="&epsg4326;">
+		    <Datasource>
+			    <Parameter name="type">shape</Parameter>
+			    <Parameter name="file">/Users/nvkelso/github/thematic-carto-tools/sample_data/ne_10m_admin_0_countries</Parameter>
+		    </Datasource>
+	    </Layer>
+    
+    </Map>
 
 
 ## Requirements
