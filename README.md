@@ -90,6 +90,50 @@ Layers MML:
     
     </Map>
 
+Describe:
+
+    data source : ne_10m_admin_0_countries.shp
+    ==== layer 0
+      shape type: Polygon
+      # features: 253
+             srs: GEOGCS["GCS_WGS_1984",
+        DATUM["WGS_1984",
+            SPHEROID["WGS_1984",6378137.0,298.257223563]],
+        PRIMEM["Greenwich",0.0],
+        UNIT["Degree",0.0174532925199433]]
+          extent: (-179.99978348919961, 180.0000000000001) - (-89.99982838943765, 83.63381093402974)
+      # fields 31: NAME (first value)
+                   ne_10m_adm	(ABW)
+                   ScaleRank	(3)
+                   LabelRank	(6)
+                   FeatureCla	(Adm-0 country)
+                   OID_	(18)
+                   SOVEREIGNT	(Netherlands)
+                   SOV_A3	(NL1)
+                   ADM0_DIF	(1.0)
+                   LEVEL	(2.0)
+                   TYPE	(Country)
+                   ADMIN	(Aruba)
+                   ADM0_A3	(ABW)
+                   GEOU_DIF	(0.0)
+                   GEOUNIT	(Aruba)
+                   GU_A3	(ABW)
+                   SU_DIF	(0.0)
+                   SUBUNIT	(Aruba)
+                   SU_A3	(ABW)
+                   NAME	(Aruba)
+                   ABBREV	(Aruba)
+                   POSTAL	(AW)
+                   NAME_FORMA	(None)
+                   TERR_	(Neth.)
+                   NAME_SORT	(Aruba)
+                   MAP_COLOR	(9.0)
+                   POP_EST	(103065.0)
+                   GDP_MD_EST	(2258.0)
+                   FIPS_10_	(0.0)
+                   ISO_A2	(AW)
+                   ISO_A3	(ABW)
+                   ISO_N3	(533.0)
 
 ## Requirements
 
