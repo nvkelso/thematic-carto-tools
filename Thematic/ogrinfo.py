@@ -25,10 +25,7 @@ functionality is analogous to the output produced by the `ogrinfo` utility.
 Walks the available layers in the supplied `data_source`, displaying
 the fields for the first `num_features` features.""")
 
-
-def describe(   data_source, 
-                num_features=10000 ):
-    
+def getData( filename ):
     #print 'data_source: ', data_source, ' num_features: ', num_features
     
     in_dir = os.path.dirname( os.path.abspath( filename ) )    
@@ -37,11 +34,9 @@ def describe(   data_source,
     
     # get the shapefile driver
     driver = ogr.GetDriverByName('ESRI Shapefile')
-    
-    #print 'in_file_name_part: ', in_file_name_part
-    
+        
     # Checking the parameters.
-    if isinstance(data_source, str):
+    if isinstance( filename, str ):
         data_source = driver.Open( in_file_name_part, 0 )
         #data_source = Dataset(data_source)
     elif isinstance(data_source, DataSource):
@@ -52,9 +47,19 @@ def describe(   data_source,
     if data_source is None:
         print 'Could not open file'
         sys.exit(1)
+        
+    return data_source
+
+def describe(   data_source, 
+                num_features=10000 ):
+    
+    in_file_fullpath = os.path.abspath( data_source )    
+
+    data_source = getData( data_source )
 
     for i, layer in enumerate(data_source):
         print "data source : %s" % data_source.name
+        print "   full path: %s" % in_file_fullpath
         print "==== layer %s" % i
         print "  shape type: %s" % ogr.GeometryTypeToName(layer.GetGeomType())
         print "  # features: %s" % len(layer)
@@ -81,6 +86,22 @@ def describe(   data_source,
             
             
             #a = gather_ogr_stats( layer, key, num_features )
+
+def fieldNamesToLowercase( data_source ):
+
+    data_source = getData( data_source )
+    
+    lowercase = ''
+    for i, layer in enumerate(data_source):
+        first_feature = layer.GetNextFeature()
+    
+        for key in first_feature.keys():
+            lowercase = lowercase + "%s as %s, " % (key, key.lower() )
+            
+        print lowercase
+        
+        sys.exit(1)
+        
                 
                 
 # TODO: This isn't tested yet
@@ -193,3 +214,5 @@ if __name__ == "__main__":
         describe( filename )
     else:
         describe( filename, num_features )
+    
+    #fieldNamesToLowercase( filename )
