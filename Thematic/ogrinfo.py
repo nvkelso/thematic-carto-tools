@@ -66,9 +66,20 @@ def describe(   data_source,
         
         first_feature = layer.GetNextFeature()
         
-        print "  # fields %s: " % len(first_feature.keys())
+        print "  # fields %s: NAME (first value)" % len(first_feature.keys())
         for key in first_feature.keys():
-            print "               %s" % key
+            try:
+                #print 'first_feature.GetField(key): ', first_feature.GetField(key), ' - ', type( first_feature.GetField(key) )
+                if type( first_feature.GetField(key) ) is str:
+                    type = 'String'
+                else:
+                    type = 'Number'
+            except:
+                type = 'Other'
+            
+            print "               %s\t(%s)" % (key, first_feature.GetField(key) )
+            
+            
             #a = gather_ogr_stats( layer, key, num_features )
                 
                 
