@@ -1,6 +1,6 @@
 # About
 
-CSV, SHP, and OGR based Python tools for querrying a data source and drawing thematic cartographic representations.
+Python tools for querrying a data source and drawing thematic cartographic representations. Works with CSV, SHP, and other OGR based data files.
 
 By **Nathaniel Vaughn Kelso** at [Stamen](http://stamen.com).
 
