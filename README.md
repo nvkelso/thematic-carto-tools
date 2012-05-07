@@ -104,6 +104,7 @@ Describe:
         UNIT["Degree",0.0174532925199433]]
           extent: (-179.99978348919961, 180.0000000000001) - (-89.99982838943765, 83.63381093402974)
       # fields 31: NAME (first value)
+                   ------------------
                    ne_10m_adm	(ABW)
                    ScaleRank	(3)
                    LabelRank	(6)
