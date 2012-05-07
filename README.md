@@ -49,6 +49,11 @@ NOTE: If you only want to generate the .mss file, try this:
     
     python thematic.py sample_data/ne_10m_admin_0_countries.shp POP_EST stylesheet.mss
 
+Wonder what indicator to use? Use the "describe" mode to report OrgInfo style field listing:
+
+    python thematic.py sample_data/ne_10m_admin_0_countries.shp --classification-type=describe
+
+
 ### Sample output
 
     .ne_10m_admin_0_countries[zoom>=0][POP_EST>=-99.0]{ polygon-fill: #ffffcc; }
