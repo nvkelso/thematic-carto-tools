@@ -93,6 +93,7 @@ Layers MML:
 Describe:
 
     data source : ne_10m_admin_0_countries.shp
+       full path: /Users/nvkelso/github/thematic-carto-tools/sample_data/ne_10m_admin_0_countries.shp
     ==== layer 0
       shape type: Polygon
       # features: 253
