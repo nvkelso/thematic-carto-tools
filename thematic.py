@@ -139,6 +139,11 @@ if __name__ == "__main__":
     classification_type = options.class_type
     filter_field = options.filter_field
     
+    # User just wants to know what's in their data file
+    if classification_type == 'describe':
+        Describe( in_file_fullpath )        
+        sys.exit(1)    
+    
     if indicator_field == None:
         print 'ALERT: no --indicator field name provided so defaulting back to single-symbol'
         classification_type = 'single-symbol'
@@ -242,14 +247,6 @@ if __name__ == "__main__":
    
     #print 'data_clean: ', data_clean
 
-    # User just wants to know what's in their data file
-    if classification_type == 'describe':
-        print 'Printing stats (one moment)...'
-        
-        # TODO: print out the (field names) and (field types).
-        #OgrInfo(in_file_fullpath)
-        
-        sys.exit(1)
         
     # If the output directory doesn't exist, make it so we don't error later on file open()
     if not os.path.exists(out_dir):
@@ -292,8 +289,6 @@ if __name__ == "__main__":
     #print 'indicator: ', indicator_field
     
     # What type of map are we making?
-    elif classification_type == 'describe':
-        Describe( in_file_fullpath )
     if classification_type == 'single-symbol':
         data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'unique-value' or classification_type == 'unique-values':
