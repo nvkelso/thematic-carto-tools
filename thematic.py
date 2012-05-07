@@ -58,7 +58,7 @@ optparser.add_option('-n', '--number-breaks', dest='num_breaks', default=5, type
                       help='Number of data breaks. single-symbol=1 by default.')
 
 optparser.add_option('-r', '--colors', dest='colors', default='YlGnBu',
-                      help='Named color series from ColorBrewer.org or other--color-space. Note yet implemented: comma-separated-values for specific #aabbcc; hex values')
+                      help='Named color series from ColorBrewer.org or other --color-space. Note yet implemented: comma-separated-values for specific #aabbcc; hex values')
 
 optparser.add_option('--color-space', dest='color-space', default='ColorBrewer',
                       help='ColorBrewer. Not yet implemented: Hex, Kuler')
