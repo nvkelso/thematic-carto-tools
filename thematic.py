@@ -290,33 +290,33 @@ if __name__ == "__main__":
     
     # What type of map are we making?
     if classification_type == 'single-symbol':
-        data_classed = Classify( data_clean, False, indicator_field, 5, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field, options.num_breaks, 'Universal', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'unique-value' or classification_type == 'unique-values':
-        data_classed = Classify( data_clean, False, indicator_field, 5, 'Unique value', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field, options.num_breaks, 'Unique value', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'quantile' or classification_type == 'quantiles':
         if not quantitative:
             print 'Can only make Quantiles for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 5, 'Quantiles', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Quantiles', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'equal-interval':
         if not quantitative:
             print 'Can only make Equal Interval for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Equal Interval', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Equal Interval', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'standard-deviation':
         if not quantitative:
             print 'Can only make Standard Deviation for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Standard Deviation', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Standard Deviation', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'minimum-variance' or classification_type == 'jenks' or classification_type == 'jenks-optimal':
         if not quantitative:
             print 'Can only make Minimum Variance for numbers fields, exiting...'
             sys.exit(1)
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Minimum Variance', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Minimum Variance', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'manual':
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Manual', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Manual', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'continuous-color' or classification_type == 'ratio':
-        data_classed = Classify( data_clean, False, indicator_field , 4, 'Ratio', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
+        data_classed = Classify( data_clean, False, indicator_field , options.num_breaks, 'Ratio', [], indicator_field, 2, 'None', [], 'YlGn', in_file_name_part  )
     elif classification_type == 'graduated-symbol':
         pass
     else:
